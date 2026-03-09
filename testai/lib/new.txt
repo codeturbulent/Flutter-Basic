@@ -1,0 +1,29 @@
+ //  final prompt = await buildtextprompt(words);
+    // final url = Uri.parse(
+    //   'https://bedrock-runtime.ap-south-1.amazonaws.com/model/global.anthropic.claude-sonnet-4-5-20250929-v1:0/converse',
+    // );
+    // final apiKey = "";
+    // final headers = {
+    //   'Content-Type': 'application/json',
+    //   'Authorization': 'Bearer $awsBedrockApiKey',
+    // };
+
+    // final body = jsonEncode({
+    //   "messages": [
+    //     {
+    //       "role": "user",
+    //       "content": [
+    //         {"text": prompt},
+    //       ],
+    //     },
+    //   ],
+    //   "tools": tool,
+    //   "system": [
+    //     {"text": systemprompt},
+    //   ],
+    //   "inferenceConfig": {"temperature": 0.7},
+    // });
+
+    // final response = await http.post(url, headers: headers, body: body);
+    // print(response.body);
+    // return response;

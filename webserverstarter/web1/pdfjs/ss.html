@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Static PDF.js Viewer</title>
+    <!-- PDF.js viewer styles -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/pdfjs-dist@4.5.136/web/pdf_viewer.css"
+    />
+    <style>
+      body {
+        margin: 0;
+      }
+      #toolbar {
+        background: #f9f9f9;
+        padding: 6px;
+        border-bottom: 1px solid #ccc;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        font-family: sans-serif;
+      }
+      #viewerContainer {
+        position: absolute;
+        top: 40px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: auto;
+        background: #eee;
+      }
+      .pdfViewer .page {
+        margin: 10px auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <label
+        >Open PDF: <input type="file" id="fileInput" accept="application/pdf"
+      /></label>
+    </div>
+    <div id="viewerContainer">
+      <div id="viewer" class="pdfViewer"></div>
+    </div>
+
+    <!-- PDF.js core + viewer -->
+    <script src="https://unpkg.com/pdfjs-dist@4.5.136/build/pdf.js"></script>
+    <script src="https://unpkg.com/pdfjs-dist@4.5.136/web/pdf_viewer.js"></script>
+
+    <script>
+      // Configure worker
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://unpkg.com/pdfjs-dist@4.5.136/build/pdf.worker.mjs";
+
+      // Setup viewer
+      const container = document.getElementById("viewerContainer");
+      const eventBus = new pdfjsViewer.EventBus();
+      const linkService = new pdfjsViewer.PDFLinkService({ eventBus });
+      const pdfViewer = new pdfjsViewer.PDFViewer({
+        container,
+        eventBus,
+        linkService,
+      });
+      linkService.setViewer(pdfViewer);
+
+      // Handle file input
+      document.getElementById("fileInput").addEventListener("change", (e) => {
+        if (!e.target.files.length) return;
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function () {
+          const typedarray = new Uint8Array(this.result);
+          pdfjsLib.getDocument({ data: typedarray }).promise.then((pdfDoc) => {
+            pdfViewer.setDocument(pdfDoc);
+            linkService.setDocument(pdfDoc);
+          });
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    </script>
+  </body>
+</html>
